@@ -2,7 +2,7 @@ import pandas as pd
 from rich.table import Table
 from rich.console import Console
 
-df = pd.read_csv('/Users/davidfjellstrom/Downloads/messy_IMDB_dataset.csv', sep=';')
+df = pd.read_csv('data/messy_IMDB_dataset.csv', sep=';')
 
 console = Console()
 table = Table(show_header=True, header_style="bold magenta")
