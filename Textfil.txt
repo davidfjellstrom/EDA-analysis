@@ -1,3 +1,31 @@
 Gjorde 2c, 2b, och 2e.
 Fick ett problem med " Votes" Den har mellanslag både före och efter talet. 
 Kan vara bra att veta till annat!
+
+
+ ### Äldre försök på dom som jag valde att byta ut för de var svåra att läsa och förstå ###
+
+
+"# Scatterplot för att se relationen mellan Score och Income
+plt.figure(figsize=(8, 5))
+sns.scatterplot(data=df, x='Score', y='Income')
+plt.title('Score vs Income')
+plt.xlabel('Score')
+plt.ylabel('Income ($)')
+plt.show()"
+
+
+"# Pairplot för att se relationer mellan flera numeriska variabler
+# Väljer ut de numeriska kolumnerna vi vill jämföra
+sns.pairplot(df[['Score', 'Income', ' Votes ', 'Release year']].dropna())
+plt.show()"
+
+
+"# Korrelationsmatris
+# Beräkna korrelationen mellan de numeriska kolumnerna.
+corr = df[['Score', 'Income', ' Votes ', 'Release year']].corr()
+
+plt.figure(figsize=(6, 5))
+sns.heatmap(corr, annot=True, fmt='.2f', cmap='coolwarm')
+plt.title('Korrelationsmatris')
+plt.show()"
