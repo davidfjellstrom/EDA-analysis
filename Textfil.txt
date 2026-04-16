@@ -29,3 +29,104 @@ plt.figure(figsize=(6, 5))
 sns.heatmap(corr, annot=True, fmt='.2f', cmap='coolwarm')
 plt.title('Korrelationsmatris')
 plt.show()"
+
+
+
+
+
+
+
+Presentationsmall — IMDB EDA (~15 min)
+1. Inledning (1–2 min)
+"Vi har valt ett IMDB-dataset med de 100 högst rankade filmerna. Datasetet innehåller 12 variabler — både numeriska och kategoriska — och var avsiktligt ostädat för att vi skulle träna på datarening."
+
+Variabler i datasetet:
+
+Variabel	Typ
+IMDB title ID	Kategorisk (ID)
+Original title	Kategorisk (text)
+Release year	Numerisk
+Genre	Kategorisk
+Duration	Numerisk (minuter)
+Country	Kategorisk
+Content Rating	Ordinalt (G, PG, PG-13, R…)
+Director	Kategorisk
+Income	Numerisk (dollar)
+Votes	Numerisk
+Score	Numerisk (0–10)
+2. Problem vi hittade i rådata (2–3 min)
+"När vi laddade in datasetet hittade vi flera typer av problem."
+
+Saknade värden:
+
+Content Rating — 24 saknade (fylldes med vanligaste värdet: R)
+Duration — 8 saknade efter rensning (fylldes med median: ~136 min)
+Score, Income — enstaka saknade, fylldes med kända IMDB-värden
+Rad 15 — helt tom rad, togs bort
+Inkonsistenta format:
+
+Release year — blandade format: 1995-02-10, 09 21 1972, 22 Feb 04 → extraherade bara året med regex
+Income — innehöll $, kommatecken, mellanslag → rensades till ren siffra
+Votes — använde . som tusentalsavgränsare → togs bort
+Felaktiga värden:
+
+Score — värden som 8,9f, 8..8, 8:8, ++8.7 → rensades med regex. Vissa värden var 10× för stora (t.ex. 89 → 8.9)
+Country — stavfel: New Zesland, Italy1, US. → standardiserades
+Release year — tvåsiffriga år: 99 tolkades som år 99 → korrigerades till 1999
+Income — 12 Angry Men hade $576 vilket är orimligt → ersattes med historiskt estimat $1 200 000
+Onödiga kolumner:
+
+Unnamed: 8 — helt tom kolumn (101 NaN) → togs bort
+3. EDA — vad berättar datan? (4–5 min)
+"Efter rensning körde vi visualiseringar för att hitta mönster."
+
+Histogram — Score-fördelning:
+
+"De flesta filmer i datasetet har Score mellan 8.0 och 8.9. Det är väntat eftersom vi tittar på topp 100 — alla är bra filmer."
+
+Boxplot — Income:
+
+"Det finns tydliga outliers i Income. Ett fåtal filmer (t.ex. The Dark Knight, LOTR) tjänade enormt mycket mer än medianfilmen. Det är en skev fördelning."
+
+Scatterplot — Score vs Income:
+
+"Det finns inget tydligt linjärt samband mellan betyg och intäkter. En film kan ha högt betyg men låga intäkter, och vice versa."
+
+Korrelationsmatris:
+
+"Votes och Score har den starkaste korrelationen (~0.2–0.3). Fler röster tenderar att gå till lite högre rankade filmer — men sambandet är svagt. Income korrelerar inte starkt med något annat."
+
+KDE per decennium:
+
+"2000-talets filmer har en något annorlunda Score-fördelning än 1990-talets — motiverade oss att testa detta statistiskt."
+
+4. Hypotestestning (2–3 min)
+"Fråga: Har filmer från 2000-talet statistiskt signifikant högre Score än filmer från 1990-talet?"
+
+Metod: Oberoende t-test (jämför medelvärden för två grupper)
+
+Tolkning av p-värdet:
+
+p < 0.05 → statistiskt signifikant skillnad — vi kan säga att skillnaden troligen inte beror på slump
+p ≥ 0.05 → ingen signifikant skillnad — vi kan inte dra slutsatsen att ett decennium är bättre
+"Kör ni cellen ser ni vilket resultat ni fick — lyft fram det och säg vad det betyder."
+
+5. Linjär regression (2–3 min)
+"Fråga: Kan vi predicera en films intäkter utifrån dess IMDB-betyg?"
+
+Modell: Enkel linjär regression — Score (X) → Income (y)
+
+Mätvärden att förklara:
+
+R² — hur stor andel av variationen i Income som förklaras av Score. R² = 0.05 betyder att Score förklarar 5% — Score är alltså en dålig prediktor för intäkter
+RMSE — genomsnittligt fel i dollar, visar hur långt ifrån modellen är i snitt
+"Slutsatsen är att ett bra betyg inte garanterar stora intäkter. Det finns många andra faktorer — marknadsföring, genre, stjärnor — som påverkar box office mer än IMDB-score."
+
+6. Slutsatser (1 min)
+"Sammanfattningsvis:"
+
+Datasetet var kraftigt ostädat med problem i nästan varje kolumn
+Efter rensning syns tydligt att topp 100-filmer klustrar kring Score 8.0–8.9
+Income är mycket ojämnt fördelat — några blockbusters dominerar totalt
+Betyg och intäkter korrelerar svagt — kvalitet och kommersiell framgång är inte samma sak
+T-testet visade [fyll i ert resultat] om skillnaden mellan decennierna
